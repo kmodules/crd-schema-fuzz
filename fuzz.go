@@ -8,6 +8,8 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextensionsinstall "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/install"
+	crdv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	crdv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	structuralschema "k8s.io/apiextensions-apiserver/pkg/apiserver/schema"
 	structuralpruning "k8s.io/apiextensions-apiserver/pkg/apiserver/schema/pruning"
 	"k8s.io/apimachinery/pkg/api/apitesting/fuzzer"
@@ -136,4 +138,28 @@ func SchemaFuzzTestForCRDWithPath(t *testing.T, scheme *runtime.Scheme, path str
 	}
 
 	SchemaFuzzTestForInternalCRD(t, scheme, crd, fuzzingFuncs)
+}
+
+// SchemaFuzzTestForV1beta1CRD will perform schema validation based pruning
+// fuzz tests against all versions defined in a given v1beta1 CRD object.
+func SchemaFuzzTestForV1beta1CRD(t *testing.T, scheme *runtime.Scheme, crd *crdv1beta1.CustomResourceDefinition, fuzzingFuncs fuzzer.FuzzerFuncs) {
+	var internalCRD apiextensions.CustomResourceDefinition
+	err := crdv1beta1.Convert_v1beta1_CustomResourceDefinition_To_apiextensions_CustomResourceDefinition(crd, &internalCRD, nil)
+	if err != nil {
+		t.Fatalf("Failed to convert v1beta1 CRD to internal CRD: %v", err)
+		return
+	}
+	SchemaFuzzTestForInternalCRD(t, scheme, &internalCRD, fuzzingFuncs)
+}
+
+// SchemaFuzzTestForV1CRD will perform schema validation based pruning
+// fuzz tests against all versions defined in a given v1 CRD object.
+func SchemaFuzzTestForV1CRD(t *testing.T, scheme *runtime.Scheme, crd *crdv1.CustomResourceDefinition, fuzzingFuncs fuzzer.FuzzerFuncs) {
+	var internalCRD apiextensions.CustomResourceDefinition
+	err := crdv1.Convert_v1_CustomResourceDefinition_To_apiextensions_CustomResourceDefinition(crd, &internalCRD, nil)
+	if err != nil {
+		t.Fatalf("Failed to convert v1 CRD to internal CRD: %v", err)
+		return
+	}
+	SchemaFuzzTestForInternalCRD(t, scheme, &internalCRD, fuzzingFuncs)
 }
