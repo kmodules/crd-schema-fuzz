@@ -39,7 +39,7 @@ func init() {
 func SchemaFuzzTestForObject(t *testing.T, scheme *runtime.Scheme, obj runtime.Object, schema *structuralschema.Structural, fuzzingFuncs fuzzer.FuzzerFuncs) {
 	codecFactory := serializer.NewCodecFactory(scheme)
 	fuzzer := fuzzer.FuzzerFor(
-		fuzzer.MergeFuzzerFuncs(metafuzzer.Funcs, fuzzingFuncs),
+		SafeFuzzerFuncs(metafuzzer.Funcs, fuzzingFuncs),
 		rand.NewSource(rand.Int63()),
 		codecFactory,
 	)
