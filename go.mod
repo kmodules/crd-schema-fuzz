@@ -3,10 +3,10 @@ module kmodules.xyz/crd-schema-fuzz
 go 1.18
 
 require (
-	github.com/google/go-cmp v0.5.6
-	github.com/google/gofuzz v1.1.0
-	k8s.io/apiextensions-apiserver v0.25.0-rc.1
-	k8s.io/apimachinery v0.25.0-rc.1
+	github.com/google/go-cmp v0.5.9
+	github.com/google/gofuzz v1.2.0
+	k8s.io/apiextensions-apiserver v0.25.1
+	k8s.io/apimachinery v0.25.1
 )
 
 require (
