@@ -1,8 +1,8 @@
 package crdfuzz
 
 import (
-	"io/ioutil"
 	"math/rand"
+	"os"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
