@@ -3,10 +3,10 @@ package crdfuzz
 import (
 	"reflect"
 
-	fuzz "github.com/google/gofuzz"
 	"k8s.io/apimachinery/pkg/api/apitesting/fuzzer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"sigs.k8s.io/randfill"
 )
 
 // SafeFuzzerFuncs will merge the given funcLists, replacing any fuzzer for metav1.ObjectMeta with
@@ -32,8 +32,8 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 				}
 			}
 		}
-		result = append(result, func(j *metav1.ObjectMeta, c fuzz.Continue) {
-			c.FuzzNoCustom(j)
+		result = append(result, func(j *metav1.ObjectMeta, c randfill.Continue) {
+			c.Fill(j)
 
 			if len(j.Labels) == 0 {
 				j.Labels = nil
