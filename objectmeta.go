@@ -20,8 +20,8 @@ import (
 //
 // ref: https://github.com/kubernetes-sigs/controller-tools/commit/adfbf775195bf1c2366286684cc77a97b04a8cb9
 func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
-	return func(codecs serializer.CodecFactory) []interface{} {
-		result := []interface{}{}
+	return func(codecs serializer.CodecFactory) []any {
+		result := []any{}
 		for _, fns := range funcs {
 			if fns == nil {
 				continue
@@ -50,7 +50,7 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 			}
 
 			j.GenerateName = ""
-			j.SelfLink = ""
+			j.SelfLink = "" //nolint:staticcheck // SA1019 backwards compatibility
 			j.UID = ""
 			j.ResourceVersion = ""
 			j.Generation = 0
@@ -64,7 +64,7 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 	}
 }
 
-func fuzzerForObjectMeta(f interface{}) bool {
+func fuzzerForObjectMeta(f any) bool {
 	x := reflect.TypeOf(f)
 	if x.Kind() != reflect.Func {
 		return false
